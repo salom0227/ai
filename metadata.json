@@ -1,0 +1,6 @@
+{
+  "name": "AI MALL GLOBAL",
+  "description": "O'zbekistondagi yuzlab do'konlar va xaridorlar uchun sun'iy intellekt (AI Try-On, AI o'lcham tavsiyasi va AI stilist) bilan jihozlangan premium va professional Multi-Vendor savdo hamkorlik platformasi.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
