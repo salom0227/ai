@@ -62,7 +62,12 @@ export default function App() {
   const [products, setProducts] = useState<Product[]>([]);
   const [stores, setStores] = useState<Store[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
-  const [wishlist, setWishlist] = useState<string[]>([]);
+  const [wishlist, setWishlist] = useState<string[]>(() => {
+    try {
+      const saved = localStorage.getItem("ai_mall_wishlist");
+      return saved ? JSON.parse(saved) : [];
+    } catch (_) { return []; }
+  });
   const [cart, setCart] = useState<CartItem[]>([]);
   
   // Checkout simulator & coupons state
@@ -106,7 +111,13 @@ export default function App() {
         setStores(storeData);
       }
 
-      const ordRes = await fetch("/api/orders");
+      // Buyurtmalarni joriy foydalanuvchiga qarab filter qilish
+      const savedUser = localStorage.getItem("ai_mall_user");
+      const activeUser = savedUser ? JSON.parse(savedUser) : null;
+      const ordUrl = activeUser && activeUser.role === "customer"
+        ? `/api/orders?userId=${activeUser.id}`
+        : "/api/orders";
+      const ordRes = await fetch(ordUrl);
       if (ordRes.ok) {
         const ordData = await ordRes.json();
         setOrders(ordData);
@@ -119,6 +130,11 @@ export default function App() {
   useEffect(() => {
     fetchDbData();
   }, []);
+
+  // Wishlist localStorage sync
+  useEffect(() => {
+    localStorage.setItem("ai_mall_wishlist", JSON.stringify(wishlist));
+  }, [wishlist]);
 
   // Sync route on manual pathname matches (supporting /admin & /superadmin URLs)
   useEffect(() => {
@@ -178,7 +194,8 @@ export default function App() {
   // Switch to correct specific store if logged-in user is Owner
   const getLoggedInVendorStore = () => {
     if (!currentUser || currentUser.role !== "owner") return null;
-    return stores.find(s => s.ownerEmail === currentUser.email) || null;
+    // ownerId orqali to'g'ri qidirish
+    return stores.find(s => s.ownerId === currentUser.id) || null;
   };
 
   // Auth logins handler
@@ -316,9 +333,12 @@ export default function App() {
   };
 
   const handleToggleWishlist = (productId: string) => {
-    setWishlist(prev => 
-      prev.includes(productId) ? prev.filter(p => p !== productId) : [...prev, productId]
-    );
+    setWishlist(prev => {
+      const updated = prev.includes(productId)
+        ? prev.filter(p => p !== productId)
+        : [...prev, productId];
+      return updated;
+    });
   };
 
   // Computed total values
@@ -696,8 +716,9 @@ export default function App() {
               <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
                 <div className="w-full max-w-lg">
                   <PaymeClickSimulator
-                    totalPrice={totalCartCheckoutValue}
-                    onCompletePayment={executePaymentCheckout}
+                    method="payme"
+                    amount={totalCartCheckoutValue}
+                    onSuccess={executePaymentCheckout}
                     onCancel={() => setShowPaySimulator(false)}
                   />
                 </div>

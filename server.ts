@@ -395,6 +395,8 @@ async function startServer() {
     const newStore: Store = {
       id: `store-${Date.now()}`,
       ownerId: ownerUserId,
+      ownerName: newOwner.fullName,
+      ownerEmail: newOwner.email,
       name,
       slug: name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
       logo: logo || "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=300&q=80",
@@ -750,6 +752,58 @@ async function startServer() {
     res.json({ success: true, review: newReview });
   });
 
+  // GET ALL USERS (Admin use)
+  app.get("/api/users", (req, res) => {
+    const state = loadDb();
+    const sanitized = state.users.map(({ password, ...u }) => u);
+    res.json(sanitized);
+  });
+
+  // CREATE USER (Admin)
+  app.post("/api/users", (req, res) => {
+    const { fullName, email, phone, password, role, avatar } = req.body;
+    const state = loadDb();
+    if (state.users.some(u => u.email === email)) {
+      return res.status(400).json({ success: false, message: "Email already registered." });
+    }
+    const newUser: User = {
+      id: `user-${Date.now()}`,
+      fullName, email, phone,
+      password: password || "111111",
+      role: role || "customer",
+      avatar: avatar || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=300&q=80",
+      language: "uz",
+      createdAt: new Date().toISOString()
+    };
+    state.users.push(newUser);
+    saveDb(state);
+    const { password: _, ...sanitized } = newUser;
+    res.json({ success: true, user: sanitized });
+  });
+
+  // UPDATE USER
+  app.put("/api/users/:id", (req, res) => {
+    const { id } = req.params;
+    const state = loadDb();
+    const idx = state.users.findIndex(u => u.id === id);
+    if (idx === -1) return res.status(404).json({ success: false, message: "User not found." });
+    state.users[idx] = { ...state.users[idx], ...req.body, id };
+    saveDb(state);
+    const { password: _, ...sanitized } = state.users[idx];
+    res.json({ success: true, user: sanitized });
+  });
+
+  // DELETE USER
+  app.delete("/api/users/:id", (req, res) => {
+    const { id } = req.params;
+    const state = loadDb();
+    const idx = state.users.findIndex(u => u.id === id);
+    if (idx === -1) return res.status(404).json({ success: false, message: "User not found." });
+    state.users.splice(idx, 1);
+    saveDb(state);
+    res.json({ success: true });
+  });
+
   // GET NOTIFICATIONS
   app.get("/api/notifications", (req, res) => {
     const { userId } = req.query;
@@ -884,7 +938,7 @@ async function startServer() {
 
       if (hasKey) {
         const response = await gemini.models.generateContent({
-          model: "gemini-3.5-flash",
+          model: "gemini-2.0-flash",
           contents: [
             { inlineData: { data: imageBase64.split(",")[1] || imageBase64, mimeType: "image/png" } },
             { text: searchPrompt }
@@ -1041,7 +1095,7 @@ async function startServer() {
 
       if (hasKey) {
         const response = await gemini.models.generateContent({
-          model: "gemini-3.5-flash",
+          model: "gemini-2.0-flash",
           contents: requestContent,
           config: {
             responseMimeType: "application/json",
@@ -1098,7 +1152,7 @@ async function startServer() {
       let answer = "";
       if (hasKey) {
         const response = await gemini.models.generateContent({
-          model: "gemini-3.5-flash",
+          model: "gemini-2.0-flash",
           contents: `${formattedChat}\nAI STYLIST:`,
           config: { systemInstruction: systemIns }
         });
@@ -1148,7 +1202,7 @@ async function startServer() {
       let matchedItems: any[] = [];
       if (hasKey) {
         const response = await gemini.models.generateContent({
-          model: "gemini-3.5-flash",
+          model: "gemini-2.0-flash",
           contents: searchPrompt,
           config: {
             responseMimeType: "application/json",
@@ -1218,7 +1272,7 @@ async function startServer() {
 
       if (hasKey) {
         const response = await gemini.models.generateContent({
-          model: "gemini-3.5-flash",
+          model: "gemini-2.0-flash",
           contents: generatorPrompt,
           config: {
             responseMimeType: "application/json",
@@ -1287,7 +1341,7 @@ async function startServer() {
 
       if (hasKey) {
         const response = await gemini.models.generateContent({
-          model: "gemini-3.5-flash",
+          model: "gemini-2.0-flash",
           contents: analyzerPrompt,
           config: {
             responseMimeType: "application/json",
@@ -1314,6 +1368,85 @@ async function startServer() {
         cons: ["Limited availability"],
         summary: "Excellent consensus on build quality and elegant representation."
       });
+    }
+  });
+
+  // AI 0: GENERATE PRODUCT IMAGE (Gemini Imagen)
+  app.post("/api/ai/generate-image", async (req, res) => {
+    const { prompt, style } = req.body;
+    if (!prompt) return res.status(400).json({ error: "Prompt talab qilinadi" });
+
+    const fullPrompt = `High quality professional product photo for luxury e-commerce marketplace: ${prompt}. ${style || "Clean white background, studio lighting, premium fashion photography style, ultra realistic"}. 4K quality.`;
+
+    try {
+      const gemini = getGeminiClient();
+      const hasKey = process.env.GEMINI_API_KEY;
+
+      if (hasKey) {
+        try {
+          // Gemini 2.0 Flash bilan rasm generatsiya
+          const response = await gemini.models.generateContent({
+            model: "gemini-2.0-flash-preview-image-generation",
+            contents: fullPrompt,
+            config: {
+              responseModalities: ["TEXT", "IMAGE"],
+            }
+          });
+
+          // Rasm topilsa qaytarish
+          for (const part of response.candidates?.[0]?.content?.parts || []) {
+            if (part.inlineData?.data) {
+              return res.json({
+                success: true,
+                imageBase64: `data:image/png;base64,${part.inlineData.data}`,
+                source: "gemini-generated"
+              });
+            }
+          }
+        } catch (imgErr: any) {
+          console.warn("Gemini image generation fallback:", imgErr.message);
+        }
+      }
+
+      // Fallback: Unsplash AI rasmlar
+      const categoryImages: Record<string, string[]> = {
+        clothing: [
+          "https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&w=600&q=80",
+          "https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=600&q=80",
+          "https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=600&q=80"
+        ],
+        electronics: [
+          "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80",
+          "https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=600&q=80"
+        ],
+        footwear: [
+          "https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&w=600&q=80",
+          "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=600&q=80"
+        ],
+        home: [
+          "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=600&q=80"
+        ]
+      };
+
+      // Promptdan kategoriya aniqlash
+      const lp = prompt.toLowerCase();
+      let cat = "clothing";
+      if (lp.includes("electron") || lp.includes("phone") || lp.includes("watch") || lp.includes("keyboard")) cat = "electronics";
+      else if (lp.includes("shoe") || lp.includes("sneaker") || lp.includes("boot") || lp.includes("krossovka") || lp.includes("poyabzal")) cat = "footwear";
+      else if (lp.includes("home") || lp.includes("furniture") || lp.includes("uy")) cat = "home";
+
+      const imgs = categoryImages[cat] || categoryImages.clothing;
+      const randomImg = imgs[Math.floor(Math.random() * imgs.length)];
+
+      res.json({
+        success: true,
+        imageBase64: randomImg,
+        source: "fallback-stock"
+      });
+
+    } catch (err: any) {
+      console.error("Image generation error:", err);
+      res.status(500).json({ error: "Rasm generatsiyasida xatolik", details: err.message });
     }
   });
 

@@ -41,6 +41,12 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({
     keywords: string[];
   } | null>(null);
 
+  // AI Image Generator States
+  const [imagePrompt, setImagePrompt] = useState("");
+  const [imageGenLoading, setImageGenLoading] = useState(false);
+  const [generatedImageUrl, setGeneratedImageUrl] = useState("");
+  const [imageGenSource, setImageGenSource] = useState<"gemini-generated" | "fallback-stock" | "">("")
+
   useEffect(() => {
     if (vendorStore) {
       // Filter products & orders matching store ID
@@ -92,6 +98,41 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({
       }));
     } finally {
       setCopywriterLoading(false);
+    }
+  };
+
+  // AI Rasm Generatsiya
+  const handleGenerateImage = async () => {
+    if (!imagePrompt.trim() && !newProd.title.trim()) {
+      alert("Iltimos, rasm uchun tavsif yoki mahsulot nomi kiriting.");
+      return;
+    }
+    setImageGenLoading(true);
+    setGeneratedImageUrl("");
+    try {
+      const prompt = imagePrompt.trim() || newProd.title;
+      const response = await fetch("/api/ai/generate-image", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt, style: `${copywriterCategory} product, luxury e-commerce` })
+      });
+      if (!response.ok) throw new Error("Rasm generatsiyasida xatolik");
+      const data = await response.json();
+      if (data.imageBase64) {
+        setGeneratedImageUrl(data.imageBase64);
+        setImageGenSource(data.source || "");
+        // Formaga avtomatik URL qo'shish
+        setNewProd(p => ({ ...p, imageUrl: data.imageBase64 }));
+        alert(data.source === "gemini-generated"
+          ? "✅ Gemini AI tomonidan rasm muvaffaqiyatli yaratildi!"
+          : "✅ Premium stock rasm tanlandi! (Gemini API key kerak haqiqiy generatsiya uchun)"
+        );
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Rasm yaratishda xatolik yuz berdi.");
+    } finally {
+      setImageGenLoading(false);
     }
   };
 
@@ -400,15 +441,52 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({
               </div>
             </div>
 
-            <div>
-              <label className="block text-white/50 mb-1">Ulanadigan rasm URL manzili (Unsplash)</label>
-              <input
-                type="text"
-                placeholder="https://..."
-                value={newProd.imageUrl}
-                onChange={(e) => setNewProd((p) => ({ ...p, imageUrl: e.target.value }))}
-                className="w-full bg-slate-950 border border-white/10 text-white rounded-lg px-3 py-2 text-xs outline-none focus:border-cyan-400 font-mono"
-              />
+            {/* AI RASM GENERATSIYA PANELI */}
+            <div className="space-y-2 p-3 bg-indigo-950/20 border border-indigo-500/20 rounded-xl">
+              <label className="block text-indigo-300 font-bold text-[10px] uppercase tracking-widest flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5" /> AI Rasm Generatsiyasi (Gemini)
+              </label>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  placeholder="Masalan: 'silk uzbek dress white background'..."
+                  value={imagePrompt}
+                  onChange={(e) => setImagePrompt(e.target.value)}
+                  className="flex-1 bg-slate-950 border border-white/10 text-white rounded-lg px-3 py-2 text-xs outline-none focus:border-indigo-400"
+                />
+                <button
+                  type="button"
+                  onClick={handleGenerateImage}
+                  disabled={imageGenLoading}
+                  className="px-3 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold cursor-pointer flex items-center gap-1.5 transition shrink-0"
+                >
+                  {imageGenLoading ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+                  {imageGenLoading ? "Yaratilmoqda..." : "AI Rasm"}
+                </button>
+              </div>
+              {generatedImageUrl && (
+                <div className="flex items-center gap-3 mt-2">
+                  <img
+                    src={generatedImageUrl}
+                    alt="Generated"
+                    className="w-16 h-16 object-cover rounded-lg border border-indigo-500/30"
+                  />
+                  <div className="text-[10px] space-y-0.5">
+                    <p className="text-emerald-400 font-bold">✅ Rasm tayyor va formaga qo'shildi!</p>
+                    <p className="text-white/40">{imageGenSource === "gemini-generated" ? "Gemini AI tomonidan yaratildi" : "Stock rasm ishlatildi"}</p>
+                  </div>
+                </div>
+              )}
+              <div className="mt-1">
+                <label className="block text-white/30 mb-1 text-[10px]">Yoki URL qo'lda kiriting:</label>
+                <input
+                  type="text"
+                  placeholder="https://..."
+                  value={newProd.imageUrl}
+                  onChange={(e) => setNewProd((p) => ({ ...p, imageUrl: e.target.value }))}
+                  className="w-full bg-slate-950 border border-white/10 text-white rounded-lg px-3 py-1.5 text-xs outline-none focus:border-cyan-400 font-mono"
+                />
+              </div>
             </div>
 
             <div>

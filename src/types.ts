@@ -22,6 +22,8 @@ export type StoreStatus = 'pending' | 'active' | 'suspended';
 export interface Store {
   id: string;
   ownerId: string;
+  ownerName?: string;
+  ownerEmail?: string;
   name: string;
   slug: string;
   logo: string;

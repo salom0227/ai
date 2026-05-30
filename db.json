@@ -1,0 +1,358 @@
+{
+  "users": [
+    {
+      "id": "admin-1",
+      "fullName": "Super Admin",
+      "email": "admin@aimall.com",
+      "phone": "+998 90 123 45 67",
+      "password": "admin",
+      "role": "admin",
+      "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80",
+      "language": "en",
+      "createdAt": "2026-05-30T06:17:40.238Z"
+    },
+    {
+      "id": "vendor-1",
+      "fullName": "Davron Aliev",
+      "email": "vendor@aimall.com",
+      "phone": "+998 90 987 65 43",
+      "password": "vendor",
+      "role": "owner",
+      "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80",
+      "language": "uz",
+      "createdAt": "2026-05-30T06:17:40.239Z"
+    },
+    {
+      "id": "customer-1",
+      "fullName": "Shahzod Qalandarov",
+      "email": "shahzodqalandarov414@gmail.com",
+      "phone": "+998 91 234 56 78",
+      "password": "customer",
+      "role": "customer",
+      "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80",
+      "language": "ru",
+      "createdAt": "2026-05-30T06:17:40.239Z"
+    },
+    {
+      "id": "user-1780122188527",
+      "fullName": "shahzod",
+      "email": "qwert@gmail.com",
+      "phone": "+998972990163",
+      "password": "salom123",
+      "role": "customer",
+      "avatar": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=300&q=80",
+      "language": "en",
+      "createdAt": "2026-05-30T06:23:08.527Z"
+    }
+  ],
+  "stores": [
+    {
+      "id": "store-1",
+      "ownerId": "vendor-1",
+      "name": "Silk Road Premium",
+      "slug": "silk-road-premium",
+      "logo": "https://images.unsplash.com/photo-1516257984-b1b4d707412e?auto=format&fit=crop&w=300&q=80",
+      "banner": "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1200&q=80",
+      "description": "Exclusive traditional silk clothing combined with modern tech-wear designs direct from Tashkent.",
+      "status": "active",
+      "commissionRate": 8,
+      "rating": 4.8,
+      "followers": 1240,
+      "verified": true
+    },
+    {
+      "id": "store-2",
+      "ownerId": "admin-1",
+      "name": "Neo Tech Lab",
+      "slug": "neo-tech-lab",
+      "logo": "https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=300&q=80",
+      "banner": "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=80",
+      "description": "Apple inspired premium smart watches, futuristic mechanical keyboards, and gaming accessories.",
+      "status": "active",
+      "commissionRate": 10,
+      "rating": 4.9,
+      "followers": 6500,
+      "verified": true
+    }
+  ],
+  "categories": [
+    {
+      "id": "clothing",
+      "name": {
+        "en": "Clothing",
+        "uz": "Kiyim-kechak",
+        "ru": "Одежда"
+      },
+      "parentId": null
+    },
+    {
+      "id": "electronics",
+      "name": {
+        "en": "Electronics",
+        "uz": "Elektronika",
+        "ru": "Электроника"
+      },
+      "parentId": null
+    },
+    {
+      "id": "footwear",
+      "name": {
+        "en": "Footwear",
+        "uz": "Poyabzal",
+        "ru": "Обувь"
+      },
+      "parentId": null
+    },
+    {
+      "id": "home",
+      "name": {
+        "en": "Home & Living",
+        "uz": "Uy va Ro'zg'or",
+        "ru": "Дом и быт"
+      },
+      "parentId": null
+    }
+  ],
+  "products": [
+    {
+      "id": "prod-1",
+      "storeId": "store-1",
+      "categoryId": "clothing",
+      "title": "Uzbek Traditional Silk Ikat Dress",
+      "description": "Exquisite hand-woven natural silk Margilan Ikat dress. Comfortable, light-weight premium fabric with traditional patterns reimagined for the luxury lifestyle.",
+      "price": 180,
+      "stock": 11,
+      "images": [
+        "https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=600&q=80",
+        "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?auto=format&fit=crop&w=600&q=80"
+      ],
+      "status": "active",
+      "rating": 4.8,
+      "salesCount": 46
+    },
+    {
+      "id": "prod-2",
+      "storeId": "store-1",
+      "categoryId": "clothing",
+      "title": "Cyberpunk Chapan Embroidered Jacket",
+      "description": "Neo-traditional chapan featuring deep obsidian color styling, tech-cargo buckles, and glow-resistant silk embroidery patterns.",
+      "price": 240,
+      "stock": 8,
+      "images": [
+        "https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=600&q=80",
+        "https://images.unsplash.com/photo-1495105787522-5334e3ffa0ef?auto=format&fit=crop&w=600&q=80"
+      ],
+      "status": "active",
+      "rating": 4.9,
+      "salesCount": 22
+    },
+    {
+      "id": "prod-3",
+      "storeId": "store-2",
+      "categoryId": "electronics",
+      "title": "Holographic Smart Watch Model N-1",
+      "description": "Premium wristwear featuring responsive glassmorphism navigation UI, real-time stress metrics, and standalone Uzbek/Russian semantic localized interface.",
+      "price": 450,
+      "stock": 14,
+      "images": [
+        "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80",
+        "https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?auto=format&fit=crop&w=600&q=80"
+      ],
+      "status": "active",
+      "rating": 4.7,
+      "salesCount": 89
+    },
+    {
+      "id": "prod-4",
+      "storeId": "store-2",
+      "categoryId": "electronics",
+      "title": "Mechanical Keyboard Amber Glow",
+      "description": "Aesthetic tactile layout fitted with solid walnut base plate and amber LEDs. Pre-lubed linear gold luxury switches.",
+      "price": 135,
+      "stock": 20,
+      "images": [
+        "https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=600&q=80"
+      ],
+      "status": "active",
+      "rating": 5,
+      "salesCount": 110
+    },
+    {
+      "id": "prod-5",
+      "storeId": "store-2",
+      "categoryId": "footwear",
+      "title": "Minimalist Aero Mesh Sneakers",
+      "description": "Aero knit pattern with shock-absorbent luxury custom sole. Breathable design perfect for business-casual environments.",
+      "price": 95,
+      "stock": 45,
+      "images": [
+        "https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&w=600&q=80",
+        "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=600&q=80"
+      ],
+      "status": "active",
+      "rating": 4.6,
+      "salesCount": 304
+    }
+  ],
+  "orders": [
+    {
+      "id": "ord-1",
+      "userId": "customer-1",
+      "totalAmount": 335,
+      "paymentStatus": "paid",
+      "orderStatus": "delivered",
+      "createdAt": "2026-05-27T06:17:40.239Z"
+    },
+    {
+      "id": "ord-1780122895720",
+      "userId": "user-1780122188527",
+      "totalAmount": 705.6,
+      "paymentStatus": "paid",
+      "orderStatus": "pending",
+      "createdAt": "2026-05-30T06:34:55.720Z"
+    }
+  ],
+  "orderItems": [
+    {
+      "id": "item-1",
+      "orderId": "ord-1",
+      "productId": "prod-1",
+      "quantity": 1,
+      "price": 180,
+      "productTitle": "Uzbek Traditional Silk Ikat Dress",
+      "productImage": "https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=600&q=80",
+      "storeId": "store-1"
+    },
+    {
+      "id": "item-2",
+      "orderId": "ord-1",
+      "productId": "prod-4",
+      "quantity": 1,
+      "price": 135,
+      "productTitle": "Mechanical Keyboard Amber Glow",
+      "productImage": "https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=600&q=80",
+      "storeId": "store-2"
+    },
+    {
+      "id": "item-1780122895721-0",
+      "orderId": "ord-1780122895720",
+      "productId": "prod-3",
+      "quantity": 1,
+      "price": 450,
+      "productTitle": "Holographic Smart Watch Model N-1",
+      "productImage": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80",
+      "storeId": "store-2"
+    },
+    {
+      "id": "item-1780122895721-1",
+      "orderId": "ord-1780122895720",
+      "productId": "prod-1",
+      "quantity": 1,
+      "price": 180,
+      "productTitle": "Uzbek Traditional Silk Ikat Dress",
+      "productImage": "https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=600&q=80",
+      "storeId": "store-1"
+    }
+  ],
+  "reviews": [
+    {
+      "id": "rev-1",
+      "userId": "customer-1",
+      "userFullName": "Shahzod Qalandarov",
+      "userAvatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80",
+      "productId": "prod-1",
+      "rating": 5,
+      "comment": "Absolutely breathtaking craftsmanship. The traditional patterns fit flawlessly! Exquisite texture and fast delivery.",
+      "createdAt": "2026-05-30T06:17:40.239Z"
+    },
+    {
+      "id": "rev-2",
+      "userId": "customer-1",
+      "userFullName": "Shahzod Qalandarov",
+      "userAvatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80",
+      "productId": "prod-3",
+      "rating": 4,
+      "comment": "The wrist interface works seamlessly. It looks modern but battery life could be a tab higher. Beautiful minimalist feel.",
+      "createdAt": "2026-05-30T06:17:40.239Z"
+    }
+  ],
+  "coupons": [
+    {
+      "id": "cp-1",
+      "code": "AIMALL10",
+      "discount": 10
+    },
+    {
+      "id": "cp-2",
+      "code": "LUXURY25",
+      "discount": 25
+    }
+  ],
+  "aiRequests": [
+    {
+      "id": "ai-1780122761574",
+      "userId": "customer-1",
+      "requestType": "try_on",
+      "createdAt": "2026-05-30T06:32:41.574Z",
+      "responseData": "Our premium AI engine evaluated your try-on on the luxury item: \"Uzbek Traditional Silk Ikat Dress\". The curves drape smoothly over your uploaded shoulders, creating a beautiful classic silhouette with rich textured shadow accents. This deep style adds majestic focus. Pair with matching light Aero Sneakers for contemporary elegant aesthetics.\n\nJSON:\n{\"compatabilityScore\": 94, \"styleAdvice\": \"Exceptional fit with traditional silk/lux contours.\", \"accessoriesRecommended\": [\"Amber Glow Keyboard\", \"Minimalist Aero mesh\"]}"
+    },
+    {
+      "id": "ai-1780122848628",
+      "userId": "customer-1",
+      "requestType": "try_on",
+      "createdAt": "2026-05-30T06:34:08.628Z",
+      "responseData": "Our premium AI engine evaluated your try-on on the luxury item: \"Uzbek Traditional Silk Ikat Dress\". The curves drape smoothly over your uploaded shoulders, creating a beautiful classic silhouette with rich textured shadow accents. This deep style adds majestic focus. Pair with matching light Aero Sneakers for contemporary elegant aesthetics.\n\nJSON:\n{\"compatabilityScore\": 94, \"styleAdvice\": \"Exceptional fit with traditional silk/lux contours.\", \"accessoriesRecommended\": [\"Amber Glow Keyboard\", \"Minimalist Aero mesh\"]}"
+    },
+    {
+      "id": "ai-1780123167970",
+      "userId": "customer-1",
+      "requestType": "try_on",
+      "createdAt": "2026-05-30T06:39:27.970Z",
+      "responseData": "Our premium AI engine evaluated your try-on on the luxury item: \"Uzbek Traditional Silk Ikat Dress\". The curves drape smoothly over your uploaded shoulders, creating a beautiful classic silhouette with rich textured shadow accents. This deep style adds majestic focus. Pair with matching light Aero Sneakers for contemporary elegant aesthetics.\n\nJSON:\n{\"compatabilityScore\": 94, \"styleAdvice\": \"Exceptional fit with traditional silk/lux contours.\", \"accessoriesRecommended\": [\"Amber Glow Keyboard\", \"Minimalist Aero mesh\"]}"
+    },
+    {
+      "id": "ai-1780123173623",
+      "userId": "customer-1",
+      "requestType": "try_on",
+      "createdAt": "2026-05-30T06:39:33.623Z",
+      "responseData": "Our premium AI engine evaluated your try-on on the luxury item: \"Uzbek Traditional Silk Ikat Dress\". The curves drape smoothly over your uploaded shoulders, creating a beautiful classic silhouette with rich textured shadow accents. This deep style adds majestic focus. Pair with matching light Aero Sneakers for contemporary elegant aesthetics.\n\nJSON:\n{\"compatabilityScore\": 94, \"styleAdvice\": \"Exceptional fit with traditional silk/lux contours.\", \"accessoriesRecommended\": [\"Amber Glow Keyboard\", \"Minimalist Aero mesh\"]}"
+    },
+    {
+      "id": "ai-1780124824794",
+      "userId": "customer-1",
+      "requestType": "try_on",
+      "createdAt": "2026-05-30T07:07:04.794Z",
+      "responseData": "Our premium AI engine evaluated your try-on on the luxury item: \"Uzbek Traditional Silk Ikat Dress\". The curves drape smoothly over your uploaded shoulders, creating a beautiful classic silhouette with rich textured shadow accents. This deep style adds majestic focus. Pair with matching light Aero Sneakers for contemporary elegant aesthetics.\n\nJSON:\n{\"compatabilityScore\": 94, \"styleAdvice\": \"Exceptional fit with traditional silk/lux contours.\", \"accessoriesRecommended\": [\"Amber Glow Keyboard\", \"Minimalist Aero mesh\"]}"
+    },
+    {
+      "id": "ai-1780124833687",
+      "userId": "customer-1",
+      "requestType": "try_on",
+      "createdAt": "2026-05-30T07:07:13.687Z",
+      "responseData": "Our premium AI engine evaluated your try-on on the luxury item: \"Shirts\". The curves drape smoothly over your uploaded shoulders, creating a beautiful classic silhouette with rich textured shadow accents. This deep style adds majestic focus. Pair with matching light Aero Sneakers for contemporary elegant aesthetics.\n\nJSON:\n{\"compatabilityScore\": 94, \"styleAdvice\": \"Exceptional fit with traditional silk/lux contours.\", \"accessoriesRecommended\": [\"Amber Glow Keyboard\", \"Minimalist Aero mesh\"]}"
+    }
+  ],
+  "notifications": [
+    {
+      "id": "not-1",
+      "userId": "vendor-1",
+      "message": "Order #ord-1 has been paid. Prepare shipment for customer.",
+      "createdAt": "2026-05-30T06:17:40.239Z",
+      "read": false
+    },
+    {
+      "id": "not-1780122895721-0.5101332971939501",
+      "userId": "admin-1",
+      "message": "New multi-vendor Order #ord-1780122895720 received. Check item checklist.",
+      "createdAt": "2026-05-30T06:34:55.721Z",
+      "read": false
+    },
+    {
+      "id": "not-1780122895721-0.5787897040810639",
+      "userId": "vendor-1",
+      "message": "New multi-vendor Order #ord-1780122895720 received. Check item checklist.",
+      "createdAt": "2026-05-30T06:34:55.721Z",
+      "read": false
+    }
+  ]
+}

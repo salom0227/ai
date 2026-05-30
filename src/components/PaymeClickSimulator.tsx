@@ -2,18 +2,27 @@ import React, { useState } from "react";
 import { CheckCircle2, Shield, CreditCard, Send, Sparkles } from "lucide-react";
 
 interface PaymentSimulatorProps {
-  method: "payme" | "click" | "uzumbank" | "stripe";
-  amount: number;
-  onSuccess: (paymentId: string) => void;
+  method?: "payme" | "click" | "uzumbank" | "stripe";
+  amount?: number;
+  totalPrice?: number;
+  onSuccess?: (paymentId: string) => void;
+  onCompletePayment?: (paymentId: string) => void;
   onCancel: () => void;
 }
 
 export const PaymeClickSimulator: React.FC<PaymentSimulatorProps> = ({
-  method,
+  method = "payme",
   amount,
+  totalPrice,
   onSuccess,
+  onCompletePayment,
   onCancel,
 }) => {
+  const resolvedAmount = amount ?? totalPrice ?? 0;
+  const handleSuccess = (paymentId: string) => {
+    if (onSuccess) onSuccess(paymentId);
+    if (onCompletePayment) onCompletePayment(paymentId);
+  };
   const [step, setStep] = useState<"details" | "sms" | "success">("details");
   const [phoneNumber, setPhoneNumber] = useState("+998 (90) ");
   const [smsCode, setSmsCode] = useState("");
@@ -78,7 +87,7 @@ export const PaymeClickSimulator: React.FC<PaymentSimulatorProps> = ({
 
   const handleFinish = () => {
     const mockPaymentId = `PAY-${Math.floor(Math.random() * 10000000)}`;
-    onSuccess(mockPaymentId);
+    handleSuccess(mockPaymentId);
   };
 
   return (
@@ -105,7 +114,7 @@ export const PaymeClickSimulator: React.FC<PaymentSimulatorProps> = ({
             <div className="text-center py-4 bg-white/[0.02] border border-white/5 rounded-2xl">
               <p className="text-xs text-white/40">To'lov jami summasi</p>
               <h1 className="text-2xl font-black text-white py-1">
-                ${amount.toLocaleString()}
+                ${resolvedAmount.toLocaleString()}
               </h1>
               <p className="text-[10px] text-cyan-400 uppercase tracking-widest font-extrabold flex items-center justify-center gap-1">
                 <Shield className="w-3 h-3 animate-pulse" /> Xavfsiz Shifrlash Faol
@@ -233,7 +242,7 @@ export const PaymeClickSimulator: React.FC<PaymentSimulatorProps> = ({
               </div>
               <div className="flex justify-between">
                 <span>Summa:</span>
-                <span className="text-emerald-400 font-bold">${amount}</span>
+                <span className="text-emerald-400 font-bold">${resolvedAmount}</span>
               </div>
               <div className="flex justify-between">
                 <span>Holat:</span>
